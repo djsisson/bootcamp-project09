@@ -22,6 +22,15 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "scripts/seed_add_data.js",
+    "scripts/seed_create.js",
+    "scripts/seed_data.js",
+    "scripts/seed.js"
+  ],
   "exclude": ["node_modules"]
 }
