@@ -5,6 +5,8 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { QueryResultRow } from "@vercel/postgres";
 import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { HiOutlineSearch } from "react-icons/hi";
 
 export default function SearchTags({
   searchFunction,
@@ -37,31 +39,21 @@ export default function SearchTags({
 
   return (
     <div>
+      <Separator className="my-4" />
       <div className="relative">
         <Input
-          className="searchText relative pl-8 bg-search-icon bg-no-repeat bg-[length:2rem_2rem] bg-[centre_1rem] w-48"
+          className="searchText relative pl-8 w-48"
           type="search"
           name="Search"
           title="Search"
           onChange={onChange}
           placeholder="Search..."
         ></Input>
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="w-6 h-6 absolute top-2 left-1"
-        >
-          <path
-            fillRule="evenodd"
-            d="M10.5 3.75a6.75 6.75 0 1 0 0 13.5 6.75 6.75 0 0 0 0-13.5ZM2.25 10.5a8.25 8.25 0 1 1 14.59 5.28l4.69 4.69a.75.75 0 1 1-1.06 1.06l-4.69-4.69A8.25 8.25 0 0 1 2.25 10.5Z"
-            clipRule="evenodd"
-          />
-        </svg>
+        <HiOutlineSearch className="w-6 h-6 absolute top-2 left-1" />
       </div>
-
+      <Separator className="my-4" />
       {
-        <div className="pt-4 flex flex-col gap-2">
+        <div className="flex flex-col gap-2">
           {tagsDisplay
             ? tagsDisplay.map((x) => (
                 <Link

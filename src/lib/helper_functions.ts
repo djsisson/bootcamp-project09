@@ -1,11 +1,9 @@
+"use server";
+
 import { faker } from "@faker-js/faker";
-import { sql, db } from "@vercel/postgres";
+import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
-
-export const getHashTags = (val: string) => {
-  return val.toLowerCase().match(/#[\p{L}0-9-_]+/giu);
-};
 
 export const randomWords = () => {
   const words = [];
@@ -39,31 +37,19 @@ export const randomName = () => {
   };
 };
 
-export const upsertTags = async (
-  msgid: string,
-  msg: string,
-  editmsg = false
-) => {
-  const tags = getHashTags(msg) as string[];
-
-  if (tags?.length == 0) return;
-  tags?.forEach((x) => revalidatePath(`/posts/tags/${x.slice(1)}`));
-
-  const client = await db.connect();
-
-  if (editmsg) {
-    client.sql`DELETE FROM message_tags WHERE msg_id = ${msgid};`;
-  }
-
-  await client.sql`INSERT INTO hashtag (tag) (SELECT DISTINCT tag FROM unnest(${tags.toString()}::text[]) as tag) ON CONFLICT DO NOTHING;`;
-
-  await client.sql` INSERT INTO message_tags (SELECT m.id as msg_id, tag_id FROM messages AS m CROSS JOIN (select t.id as tag_id from hashtag as t WHERE t.tag = ANY(${tags.toString()})) WHERE m.id = ${msgid});`;
-  client.release();
-};
-
 export const getUserIdFromClerkId = async () => {
   const { userId }: { userId: string | null } = auth();
+  if (!userId) return null;
   const { rows: id } =
-    await sql`SELECT id FROM users WHERE clerk_id = ${userId}`;
+    await sql`SELECT id FROM nextusers WHERE clerk_id = ${userId}`;
   return id[0].id;
+};
+
+export const deletePost = async (msgid: string) => {
+  try {
+    await sql`DELETE FROM nextmessages where id=${msgid}`;
+    revalidatePath("/home");
+  } catch (error) {
+    console.log(error);
+  }
 };

@@ -3,6 +3,7 @@
 import SearchTags from "@/components/Search";
 import { sql } from "@vercel/postgres";
 import Link from "next/link";
+import { HiOutlineHome } from "react-icons/hi";
 
 export default async function Sidebar() {
   async function searchTags(search = "") {
@@ -20,10 +21,13 @@ export default async function Sidebar() {
   const initialValue = await searchTags();
 
   return (
-    <div className="max-h-svh border border-solid sticky top-0 p-4 rounded-r-lg hidden md:block">
-      <Link href={"/"}>
+    <div className="max-h-svh border border-solid sticky top-0 p-4 rounded-r-lg hidden md:block flex-shrink-0">
+      <Link href={"/home"}>
         <h2 className="flex rounded-lg justify-center my-2 py-1 hover:bg-blue-400">
-          Home
+          <div className="flex gap-2 items-center">
+            <HiOutlineHome />
+            <div>Home</div>
+          </div>
         </h2>
       </Link>
       <SearchTags
