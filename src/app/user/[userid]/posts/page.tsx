@@ -25,7 +25,7 @@ export default async function UserPosts({
         <BackButton>
           <HiArrowUturnLeft />
         </BackButton>
-        <Sort url={`${userid}/`}></Sort>
+        <Sort url={``}></Sort>
       </div>
       <div className="grid grid-cols-8 gap-4">
         {msgs.length == 0

@@ -1,5 +1,5 @@
 "use server";
-
+//cant get this to work in typescript due to weird behaviour when passing string array
 import { db } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 

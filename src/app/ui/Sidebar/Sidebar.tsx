@@ -27,7 +27,7 @@ export default async function Sidebar() {
   const initialValue = await searchTags();
 
   return (
-    <div className="max-h-svh border border-solid sticky top-0 p-4 rounded-r-lg hidden md:block flex-shrink-0 gap-4 bg-primary-foreground">
+    <div className="max-h-svh border border-solid sticky top-0 p-4 hidden md:block flex-shrink-0 gap-4 bg-primary-foreground">
       <div className="flex flex-col gap-4">
         <ActiveLink pathname="/home">
           <div className="flex gap-2 items-center">

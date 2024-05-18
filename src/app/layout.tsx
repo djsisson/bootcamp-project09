@@ -28,12 +28,12 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="flex flex-col gap-4 min-h-svh text-base md:text-lg lg:text-lg xl:text-xl">
+            <div className="flex flex-col min-h-svh text-base md:text-lg lg:text-lg xl:text-xl">
               <Header></Header>
               <div className="flex gap-4 relative flex-1">
                 <Sidebar></Sidebar>
 
-                <main className="flex flex-1 flex-col gap-4 h-full items-center">
+                <main className="flex flex-1 flex-col gap-4 h-full items-center pt-4">
                   <div className="max-w-prose h-full w-full">{children}</div>
                 </main>
               </div>

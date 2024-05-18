@@ -4,7 +4,7 @@ import CustomUserButton from "@/components/CustomUserButton";
 
 export default function Header() {
   return (
-    <div className="flex justify-between py-2 px-4">
+    <div className="flex justify-between py-2 px-4 bg-primary-foreground items-center">
       <div className="text-2xl md:text-3xl lg:text-4xl xl:text-5xl">
         Twedditx
       </div>

@@ -102,7 +102,7 @@ export default function Post({
             {post.user_id == curUser ? (
               <div className="flex text-sm italic gap-4 items-center">
                 <Link title="Edit Post" href={`/post/${post.id}/edit`}>
-                  <HiPencil className="text-red-500 hover:text-red-200" />
+                  <HiPencil className="text-red-500 hover:text-blue-600" />
                 </Link>
                 <DeletePost msgid={post.id}></DeletePost>
               </div>
