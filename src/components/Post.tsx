@@ -3,6 +3,9 @@ import DeletePost from "./DeletePost";
 import Image from "next/image";
 import { Suspense } from "react";
 import LoadingSpin from "./LoadingSpin";
+import { Separator } from "./ui/separator";
+import CustomHoverCard from "./HoverCard";
+import { HiOutlinePencil } from "react-icons/hi2";
 
 export default function Post({
   post,
@@ -36,7 +39,7 @@ export default function Post({
   };
 
   return (
-    <Suspense fallback={<LoadingSpin></LoadingSpin>}>
+    <>
       <div className="col-span-1 relative aspect-square">
         <Suspense fallback={<LoadingSpin></LoadingSpin>}>
           <Image
@@ -49,9 +52,16 @@ export default function Post({
         </Suspense>
       </div>
       <div className="col-span-7">
-        <div>
+        <Separator />
+        <div className="pt-4">
           <div className="flex justify-between items-center">
-            <div className="text-xs italic">@{post.username}</div>
+            <div className="text-xs italic">
+              <CustomHoverCard
+                userid={`${post.user_id}`}
+                curUser={curUser}
+                username={post.username}
+              ></CustomHoverCard>
+            </div>
             <div className="text-xs italic">{post.created?.toUTCString()}</div>
           </div>
           <div>{splitMessageTags()}</div>
@@ -74,13 +84,15 @@ export default function Post({
             </div>
             {post.user_id == curUser ? (
               <div className="flex text-xs italic gap-4 items-center">
-                <Link href={`/post/${post.id}/edit`}>Edit</Link>
+                <Link href={`/post/${post.id}/edit`}>
+                  <HiOutlinePencil />
+                </Link>
                 <DeletePost msgid={post.id}></DeletePost>
               </div>
             ) : null}
           </div>
         </div>
       </div>
-    </Suspense>
+    </>
   );
 }

@@ -68,7 +68,7 @@ export default async function Posts({
       </div>
       {msg.length == 0 ? (
         mainMsg[0].parent_id ? null : (
-          <div className="py-4">Be the first to reply!</div>
+          <SignedIn><div className="py-4">Be the first to reply!</div></SignedIn>
         )
       ) : (
         <div className="grid grid-cols-8 gap-4 pt-4">

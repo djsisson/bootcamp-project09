@@ -4,6 +4,7 @@ import { faker } from "@faker-js/faker";
 import { sql } from "@vercel/postgres";
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 export const randomWords = () => {
   const words = [];
@@ -51,5 +52,21 @@ export const deletePost = async (msgid: string) => {
     revalidatePath("/home");
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const refresh = async () => {
+  revalidatePath("/home");
+  return redirect("/home");
+};
+
+export const getUserData = async (userid: string) => {
+  try {
+    const { rows: data } =
+      await sql`select u.id, u.username, u.bio, u.imglink, (select count(*) from nextmessages m where ${userid} = m.user_id) count_posts, (select count(*) from nextuser_follows f where f.user_id = ${userid}) count_following, (select count(*) from nextuser_follows f where f.follow_id = ${userid}) count_followers from nextusers u where u.id = ${userid}`;
+    return data[0];
+  } catch (error) {
+    console.log(error);
+    return {};
   }
 };

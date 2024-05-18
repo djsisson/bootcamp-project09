@@ -7,7 +7,8 @@ const CustomUserButton = () => {
   const { resolvedTheme } = useTheme();
   return (
     <UserButton
-      userProfileMode="modal"
+      userProfileMode="navigation"
+      userProfileUrl="/settings/"
       showName={true}
       userProfileProps={{
         appearance: {

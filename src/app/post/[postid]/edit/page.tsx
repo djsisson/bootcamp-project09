@@ -65,11 +65,7 @@ export default async function Posts({
         ></EditPost>
       </SignedIn>
 
-      {msg.length == 0 ? (
-        mainMsg[0].parent_id ? null : (
-          <div className="py-4">Be the first to reply!</div>
-        )
-      ) : (
+      {msg.length == 0 ? null : (
         <>
           <div className="flex justify-between w-full pr-4 py-4">
             <BackButton>Back</BackButton>
