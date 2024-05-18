@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import BackButton from "@/components/BackButton";
 import { getUserIdFromClerkId } from "@/lib/helper_functions";
 import LoadingSpin from "@/components/LoadingSpin";
+import { HiArrowUturnLeft } from "react-icons/hi2";
 export const revalidate = 0;
 export default async function Tags({
   params: { tag },
@@ -21,7 +22,7 @@ export default async function Tags({
   return (
     <Suspense fallback={<LoadingSpin></LoadingSpin>}>
       <div className="flex justify-between w-full pr-4 pb-4">
-        <BackButton>Back</BackButton>
+        <BackButton><HiArrowUturnLeft /></BackButton>
         <Sort url={`${tag}/`}></Sort>
       </div>
       <div className="grid grid-cols-8 gap-4">

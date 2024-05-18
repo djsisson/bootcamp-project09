@@ -10,6 +10,7 @@ import { getUserIdFromClerkId } from "@/lib/helper_functions";
 import { SignedIn } from "@clerk/nextjs";
 import LoadingSpin from "@/components/LoadingSpin";
 import { redirect } from "next/navigation";
+import { HiArrowUturnLeft } from "react-icons/hi2";
 
 export const revalidate = 0;
 export default async function Posts({
@@ -63,7 +64,7 @@ export default async function Posts({
         ></NewPost>
       </SignedIn>
       <div className="flex justify-between w-full pr-4 py-4">
-        <BackButton>Back</BackButton>
+        <BackButton><HiArrowUturnLeft /></BackButton>
         <Sort url={`${postid}/`}></Sort>
       </div>
       {msg.length == 0 ? (

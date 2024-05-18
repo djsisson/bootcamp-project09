@@ -9,7 +9,7 @@ export default function DeletePost({ msgid }: { msgid: string }) {
       className="cursor-pointer"
       onClick={() => deletePost(msgid)}
     >
-      <HiOutlineTrash />
+      <HiOutlineTrash className="text-red-500 hover:text-red-200" />
     </div>
   );
 }

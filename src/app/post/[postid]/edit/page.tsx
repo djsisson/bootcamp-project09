@@ -68,7 +68,7 @@ export default async function Posts({
       {msg.length == 0 ? null : (
         <>
           <div className="flex justify-between w-full pr-4 py-4">
-            <BackButton>Back</BackButton>
+            <BackButton>Cancel</BackButton>
             <Sort url={`${postid}/`}></Sort>
           </div>
           <div className="grid grid-cols-8 gap-4 pt-4">

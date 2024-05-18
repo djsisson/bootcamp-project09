@@ -70,3 +70,39 @@ export const getUserData = async (userid: string) => {
     return {};
   }
 };
+
+export const likePost = async (
+  curUser: string,
+  msgid: string,
+  like: boolean = true
+) => {
+  try {
+    if (!like) {
+      await sql`DELETE FROM nextlikes WHERE user_id = ${curUser} AND msg_id = ${msgid}`;
+      return false;
+    }
+    await sql`INSERT INTO nextlikes (user_id, msg_id) VALUES (${curUser},${msgid}) ON CONFLICT DO NOTHING`;
+    return true;
+  } catch (error) {
+    console.log(error);
+  }
+  return null;
+};
+
+export const followUser = async (
+  curUser: string,
+  userFollow: string,
+  follow: boolean = true
+) => {
+  try {
+    if (!follow) {
+      await sql`DELETE FROM nextuser_follows WHERE user_id = ${curUser} AND follow_id = ${userFollow}`;
+      return false;
+    }
+    await sql`INSERT INTO nextuser_follows (user_id, follow_id) VALUES (${curUser},${userFollow}) ON CONFLICT DO NOTHING`;
+    return true;
+  } catch (error) {
+    console.log(error);
+  }
+  return null;
+};

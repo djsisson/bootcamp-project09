@@ -4,8 +4,14 @@ import SearchTags from "@/components/Search";
 import { sql } from "@vercel/postgres";
 import Link from "next/link";
 import { HiOutlineHome } from "react-icons/hi";
+import { SignedIn } from "@clerk/nextjs";
+import { getUserIdFromClerkId } from "@/lib/helper_functions";
+import { HiOutlineUser } from "react-icons/hi";
+import ActiveLink from "@/components/ActiveLink";
 
 export default async function Sidebar() {
+  const userid = await getUserIdFromClerkId();
+
   async function searchTags(search = "") {
     "use server";
     try {
@@ -21,15 +27,24 @@ export default async function Sidebar() {
   const initialValue = await searchTags();
 
   return (
-    <div className="max-h-svh border border-solid sticky top-0 p-4 rounded-r-lg hidden md:block flex-shrink-0">
-      <Link href={"/home"}>
-        <h2 className="flex rounded-lg justify-center my-2 py-1 hover:bg-blue-400">
+    <div className="max-h-svh border border-solid sticky top-0 p-4 rounded-r-lg hidden md:block flex-shrink-0 gap-4 bg-primary-foreground">
+      <div className="flex flex-col gap-4">
+        <ActiveLink pathname="/home">
           <div className="flex gap-2 items-center">
             <HiOutlineHome />
             <div>Home</div>
           </div>
-        </h2>
-      </Link>
+        </ActiveLink>
+        <SignedIn>
+          <ActiveLink pathname={`/user/${userid}`}>
+            <div className="flex gap-2 items-center">
+              <HiOutlineUser />
+              <div>Profile</div>
+            </div>
+          </ActiveLink>
+        </SignedIn>
+      </div>
+
       <SearchTags
         searchFunction={searchTags}
         initialValue={initialValue}

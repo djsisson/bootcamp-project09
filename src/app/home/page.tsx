@@ -33,7 +33,8 @@ export default async function posts({
 
   try {
     const { rows: msgs } =
-      await sql`SELECT m.*, u.username, u.imglink from nextmessages m JOIN nextusers u ON m.user_id = u.id where m.parent_id is null ORDER BY m.created DESC;`;
+      await sql`SELECT m.*, u.imglink, u.username, count(r.*) replies, count(l.*) likes from nextmessages m JOIN nextusers u ON m.user_id = u.id LEFT JOIN nextmessages r on m.id = r.parent_id LEFT JOIN nextlikes l on m.id = l.msg_id where m.parent_id is null GROUP BY m.id, u.username, u.imglink ORDER BY m.created DESC;`;
+
     if (searchParams?.sort == "asc") msgs?.reverse();
     return (
       <Suspense fallback={<LoadingSpin></LoadingSpin>}>

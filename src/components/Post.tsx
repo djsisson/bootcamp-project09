@@ -5,7 +5,8 @@ import { Suspense } from "react";
 import LoadingSpin from "./LoadingSpin";
 import { Separator } from "./ui/separator";
 import CustomHoverCard from "./HoverCard";
-import { HiOutlinePencil } from "react-icons/hi2";
+import { HiPencil } from "react-icons/hi2";
+import { BsFillReplyFill } from "react-icons/bs";
 
 export default function Post({
   post,
@@ -40,20 +41,21 @@ export default function Post({
 
   return (
     <>
-      <div className="col-span-1 relative aspect-square">
+      <div className="col-span-1 relative aspect-square bg-primary-foreground place-content-center justify-center rounded-full p-2 hover:ring-2">
         <Suspense fallback={<LoadingSpin></LoadingSpin>}>
-          <Image
-            className="rounded-full"
-            src={post.imglink}
-            alt={post.username}
-            height={80}
-            width={80}
-          ></Image>
+          <Link href={`/user/${post.user_id}`}>
+            <Image
+              className="rounded-full "
+              src={post.imglink}
+              alt={post.username}
+              height={80}
+              width={80}
+            ></Image>
+          </Link>
         </Suspense>
       </div>
-      <div className="col-span-7">
-        <Separator />
-        <div className="pt-4">
+      <div className="col-span-7 bg-primary-foreground p-4 rounded-3xl">
+        <div>
           <div className="flex justify-between items-center">
             <div className="text-xs italic">
               <CustomHoverCard
@@ -70,6 +72,7 @@ export default function Post({
               {post.parent_id ? (
                 post.parent_id == parent_id ? null : (
                   <Link
+                    title="View Thread"
                     className="text-xs italic"
                     href={`/post/${post.parent_id}`}
                   >
@@ -77,15 +80,29 @@ export default function Post({
                   </Link>
                 )
               ) : post.id == parent_id ? null : (
-                <Link className="text-xs italic" href={`/post/${post.id}`}>
-                  View Replies
+                <Link
+                  title="View Replies"
+                  className="text-xs italic"
+                  href={`/post/${post.id}`}
+                >
+                  {post.replies ? (
+                    <div className="flex gap-2">
+                      <BsFillReplyFill />
+                      {`${post.replies} replies`}
+                    </div>
+                  ) : (
+                    <div className="flex gap-2">
+                      <BsFillReplyFill />
+                      {` Reply`}
+                    </div>
+                  )}
                 </Link>
               )}
             </div>
             {post.user_id == curUser ? (
-              <div className="flex text-xs italic gap-4 items-center">
-                <Link href={`/post/${post.id}/edit`}>
-                  <HiOutlinePencil />
+              <div className="flex text-sm italic gap-4 items-center">
+                <Link title="Edit Post" href={`/post/${post.id}/edit`}>
+                  <HiPencil className="text-red-500 hover:text-red-200" />
                 </Link>
                 <DeletePost msgid={post.id}></DeletePost>
               </div>
