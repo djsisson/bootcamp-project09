@@ -67,7 +67,7 @@ export const getUserData = async (userid: string, curUser: string) => {
     return data[0];
   } catch (error) {
     console.log(error);
-    return {};
+    redirect("/home");
   }
 };
 
@@ -87,14 +87,14 @@ export const likePost = async (
   }
   const { rows } =
     await sql`SELECT count(*) likes, (select count(*) from nextlikes where user_id = ${curUser} AND msg_id = ${msgid}) is_liked from nextlikes where msg_id = ${msgid}`;
-  
+
   return rows[0];
 };
 
-export const reValidateAfterLike = async (curUser : string)=>{
+export const reValidateAfterLike = async (curUser: string) => {
   revalidatePath("/home");
   revalidatePath(`/user/${curUser}`);
-}
+};
 
 export const followUser = async (
   curUser: string,
@@ -114,3 +114,24 @@ export const followUser = async (
   revalidatePath(`/user/${curUser}`);
   return await getUserData(userFollow, curUser);
 };
+
+export const setBio = async (formData: FormData) => {
+  try {
+    await sql`UPDATE nextusers set bio = ${
+      formData.get("bio") as string
+    } where id = ${formData.get("userid") as string}`;
+  } catch (error) {
+    console.log(error);
+  }
+  revalidatePath("/home");
+  revalidatePath(`/user/${formData.get("userid") as string}`);
+};
+
+export async function isUUID ( uuid : string ) {
+
+  const s = uuid.match('^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$');
+  if (s === null) {
+    return false;
+  }
+  return true;
+}

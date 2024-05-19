@@ -19,6 +19,7 @@ export default function LikeButton({
 }) {
   const [liked, setLiked] = useState(isLiked as boolean);
   const [totalLikes, setTotalLikes] = useState(likes as number);
+  const [updating, setUpdating] = useState(false);
 
   useEffect(() => {
     setLiked(isLiked);
@@ -26,13 +27,15 @@ export default function LikeButton({
   }, [isLiked, likes]);
 
   const onClick = async () => {
-    if (!curUser) return;
+    if (!curUser || updating) return;
+    setUpdating(true);
     setLiked(!liked);
     setTotalLikes((x) => (liked ? +x - 1 : +x + 1));
     const data = await likePost(curUser, msgId, !liked);
     setLiked(data.is_liked == "1" ? true : false);
     setTotalLikes(data.likes as number);
     await reValidateAfterLike(curUser);
+    setUpdating(false);
   };
 
   return curUser ? (

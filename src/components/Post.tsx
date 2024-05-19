@@ -72,7 +72,7 @@ export default function Post({
                 post.parent_id == parent_id ? null : (
                   <Link
                     title="View Thread"
-                    className="text-xs italic"
+                    className="text-xs italic hover:underline"
                     href={`/post/${post.parent_id}`}
                   >
                     View Thread
@@ -81,7 +81,7 @@ export default function Post({
               ) : post.id == parent_id ? null : (
                 <Link
                   title="View Replies"
-                  className="text-xs italic"
+                  className="text-xs italic hover:underline"
                   href={`/post/${post.id}`}
                 >
                   {post.replies ? (

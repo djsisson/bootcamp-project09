@@ -11,6 +11,7 @@ import { SignedIn } from "@clerk/nextjs";
 import LoadingSpin from "@/components/LoadingSpin";
 import { redirect } from "next/navigation";
 import { HiArrowUturnLeft } from "react-icons/hi2";
+import { isUUID } from "@/lib/helper_functions";
 
 export const revalidate = 0;
 export default async function Posts({
@@ -21,6 +22,7 @@ export default async function Posts({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const userId = await getUserIdFromClerkId();
+  if (!(await isUUID(postid))) return redirect("/home");
 
   const { rows: mainMsg } =
     await sql`SELECT m.*, u.username, u.imglink, (select count(*) from nextlikes where msg_id = m.id) likes, (select count(*) from nextlikes where msg_id = m.id AND user_id = ${userId}) is_liked from nextmessages as m INNER JOIN nextusers as u ON m.user_id = u.id where m.id = ${postid};`;
@@ -64,12 +66,16 @@ export default async function Posts({
         ></NewPost>
       </SignedIn>
       <div className="flex justify-between w-full pr-4 py-4">
-        <BackButton><HiArrowUturnLeft /></BackButton>
+        <BackButton>
+          <HiArrowUturnLeft />
+        </BackButton>
         <Sort url={`${postid}/`}></Sort>
       </div>
       {msg.length == 0 ? (
         mainMsg[0].parent_id ? null : (
-          <SignedIn><div className="py-4">Be the first to reply!</div></SignedIn>
+          <SignedIn>
+            <div className="py-4">Be the first to reply!</div>
+          </SignedIn>
         )
       ) : (
         <div className="grid grid-cols-8 gap-4 pt-4">

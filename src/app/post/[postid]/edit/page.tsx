@@ -6,7 +6,7 @@ import { revalidatePath } from "next/cache";
 import EditPost from "@/components/EditPost";
 import { upsertTags } from "@/lib/helper_js";
 import { redirect } from "next/navigation";
-import { getUserIdFromClerkId } from "@/lib/helper_functions";
+import { getUserIdFromClerkId, isUUID } from "@/lib/helper_functions";
 import { SignedIn } from "@clerk/nextjs";
 
 export const revalidate = 0;
@@ -18,7 +18,7 @@ export default async function Posts({
   searchParams: { [key: string]: string | string[] | undefined };
 }) {
   const userId = await getUserIdFromClerkId();
-
+  if (!(await isUUID(postid))) return redirect("/home");
   if (!userId) redirect("/home");
 
   const { rows: mainMsg } =
