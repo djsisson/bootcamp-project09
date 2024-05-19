@@ -3,7 +3,7 @@ import DeletePost from "./DeletePost";
 import Image from "next/image";
 import { Suspense } from "react";
 import LoadingSpin from "./LoadingSpin";
-import { Separator } from "./ui/separator";
+import LikeButton from "./LikeButton";
 import CustomHoverCard from "./HoverCard";
 import { HiPencil } from "react-icons/hi2";
 import { BsFillReplyFill } from "react-icons/bs";
@@ -38,7 +38,6 @@ export default function Post({
       }
     });
   };
-
   return (
     <>
       <div className="col-span-1 relative aspect-square bg-primary-foreground place-content-center justify-center rounded-full p-2 hover:ring-2">
@@ -54,7 +53,7 @@ export default function Post({
           </Link>
         </Suspense>
       </div>
-      <div className="col-span-7 bg-primary-foreground p-4 rounded-3xl">
+      <div className="col-span-7 bg-primary-foreground p-4 pb-2 rounded-3xl">
         <div>
           <div className="flex justify-between items-center">
             <div className="text-xs italic">
@@ -67,8 +66,8 @@ export default function Post({
             <div className="text-xs italic">{post.created?.toUTCString()}</div>
           </div>
           <div>{splitMessageTags()}</div>
-          <div className="flex justify-between">
-            <div>
+          <div className="grid grid-cols-3">
+            <div className="place-content-center">
               {post.parent_id ? (
                 post.parent_id == parent_id ? null : (
                   <Link
@@ -99,8 +98,18 @@ export default function Post({
                 </Link>
               )}
             </div>
+            <div className="col-start-2 relative">
+              <LikeButton
+                key={post.id}
+                isLiked={post?.is_liked == "1" ? true : false}
+                likes={post?.likes as number}
+                curUser={curUser}
+                msgId={post.id}
+              ></LikeButton>
+            </div>
+
             {post.user_id == curUser ? (
-              <div className="flex text-sm italic gap-4 items-center">
+              <div className="flex text-sm italic gap-4 items-center col-start-3 justify-end">
                 <Link title="Edit Post" href={`/post/${post.id}/edit`}>
                   <HiPencil className="text-red-500 hover:text-blue-600" />
                 </Link>

@@ -22,12 +22,12 @@ export default async function Posts({
   if (!userId) redirect("/home");
 
   const { rows: mainMsg } =
-    await sql`SELECT m.*, u.username, u.imglink from nextmessages as m INNER JOIN nextusers as u ON m.user_id = u.id where m.id = ${postid};`;
+    await sql`SELECT m.*, u.username, u.imglink,(select count(*) from nextlikes where msg_id = m.id) likes, (select count(*) from nextlikes where msg_id = m.id AND user_id = ${userId}) is_liked from nextmessages as m INNER JOIN nextusers as u ON m.user_id = u.id where m.id = ${postid};`;
 
   if (!mainMsg[0]) return redirect(`/home`);
 
   const { rows: msg } =
-    await sql`SELECT m.*, u.username, u.imglink from nextmessages as m INNER JOIN nextusers as u ON m.user_id = u.id where parent_id=${postid} ORDER BY m.created DESC;`;
+    await sql`SELECT m.*, u.username, u.imglink, (select count(*) from nextlikes where msg_id = m.id) likes, (select count(*) from nextlikes where msg_id = m.id AND user_id = ${userId}) is_liked from nextmessages as m INNER JOIN nextusers as u ON m.user_id = u.id where parent_id=${postid} ORDER BY m.created DESC;`;
   if (searchParams?.sort == "asc") msg?.reverse();
 
   async function EditCommentFunction(formData: FormData) {

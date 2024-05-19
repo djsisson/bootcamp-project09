@@ -60,10 +60,10 @@ export const refresh = async () => {
   return redirect("/home");
 };
 
-export const getUserData = async (userid: string) => {
+export const getUserData = async (userid: string, curUser: string) => {
   try {
     const { rows: data } =
-      await sql`select u.id, u.username, u.bio, u.imglink, (select count(*) from nextmessages m where ${userid} = m.user_id) count_posts, (select count(*) from nextuser_follows f where f.user_id = ${userid}) count_following, (select count(*) from nextuser_follows f where f.follow_id = ${userid}) count_followers from nextusers u where u.id = ${userid}`;
+      await sql`select u.id, u.username, u.bio, u.imglink, (select count(*) from nextmessages m where ${userid} = m.user_id) count_posts, (select count(*) from nextuser_follows f where f.user_id = ${userid}) count_following, (select count(*) from nextuser_follows f where f.follow_id = ${userid}) count_followers, (select count(*) from nextuser_follows f where f.follow_id = ${userid} AND f.user_id = ${curUser}) is_following from nextusers u where u.id = ${userid}`;
     return data[0];
   } catch (error) {
     console.log(error);
@@ -79,15 +79,22 @@ export const likePost = async (
   try {
     if (!like) {
       await sql`DELETE FROM nextlikes WHERE user_id = ${curUser} AND msg_id = ${msgid}`;
-      return false;
+    } else {
+      await sql`INSERT INTO nextlikes (user_id, msg_id) VALUES (${curUser},${msgid}) ON CONFLICT DO NOTHING`;
     }
-    await sql`INSERT INTO nextlikes (user_id, msg_id) VALUES (${curUser},${msgid}) ON CONFLICT DO NOTHING`;
-    return true;
   } catch (error) {
     console.log(error);
   }
-  return null;
+  const { rows } =
+    await sql`SELECT count(*) likes, (select count(*) from nextlikes where user_id = ${curUser} AND msg_id = ${msgid}) is_liked from nextlikes where msg_id = ${msgid}`;
+  
+  return rows[0];
 };
+
+export const reValidateAfterLike = async (curUser : string)=>{
+  revalidatePath("/home");
+  revalidatePath(`/user/${curUser}`);
+}
 
 export const followUser = async (
   curUser: string,
@@ -97,12 +104,13 @@ export const followUser = async (
   try {
     if (!follow) {
       await sql`DELETE FROM nextuser_follows WHERE user_id = ${curUser} AND follow_id = ${userFollow}`;
-      return false;
+    } else {
+      await sql`INSERT INTO nextuser_follows (user_id, follow_id) VALUES (${curUser},${userFollow}) ON CONFLICT DO NOTHING`;
     }
-    await sql`INSERT INTO nextuser_follows (user_id, follow_id) VALUES (${curUser},${userFollow}) ON CONFLICT DO NOTHING`;
-    return true;
   } catch (error) {
     console.log(error);
   }
-  return null;
+  revalidatePath("/home");
+  revalidatePath(`/user/${curUser}`);
+  return await getUserData(userFollow, curUser);
 };

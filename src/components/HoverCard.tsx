@@ -10,7 +10,9 @@ import { Suspense } from "react";
 import Image from "next/image";
 import LoadingSpin from "./LoadingSpin";
 import { useEffect, useState } from "react";
-import { getUserData } from "@/lib/helper_functions";
+import { getUserData, followUser } from "@/lib/helper_functions";
+import FollowButton from "./FollowButton";
+import { SignedIn } from "@clerk/nextjs";
 
 type hover = {
   id: string;
@@ -20,6 +22,7 @@ type hover = {
   count_posts: number;
   count_following: number;
   count_followers: number;
+  is_following: string;
 };
 
 export default function CustomHoverCard({
@@ -36,59 +39,72 @@ export default function CustomHoverCard({
   useEffect(() => {
     async function hover() {
       if (!userid || !showCard) return;
-      const data = await getUserData(userid);
+      const data = await getUserData(userid, curUser);
       setHoverData(data as hover);
     }
     hover();
-  }, [userid, showCard]);
+  }, [userid, showCard, curUser]);
 
-  return !showCard ? (
-    <Link
-      onMouseOver={() => setShowCard(true)}
-      className="hover:underline italic"
-      href={`/user/${userid}`}
-    >
-      @{username}
-    </Link>
-  ) : (
-    <HoverCard>
+  const OnUpdate = async (isFollowing: boolean) => {
+    const data = await followUser(curUser, userid, isFollowing);
+    setHoverData(data as hover);
+  };
+
+  return (
+    <HoverCard onOpenChange={setShowCard}>
       <HoverCardTrigger asChild>
         <Link className="hover:underline italic" href={`/user/${userid}`}>
           @{username}
         </Link>
       </HoverCardTrigger>
-      <HoverCardContent className="w-100 ring-2">
-        <div className="flex justify-between space-x-4">
-          <Suspense fallback={<LoadingSpin></LoadingSpin>}>
-            <Image
-              className="rounded-full"
-              src={hoverData?.imglink}
-              alt={hoverData?.username}
-              height={80}
-              width={80}
-            ></Image>
-          </Suspense>
-          <div className="space-y-1">
-            <h4 className="text-sm font-semibold">
-              <Link className="hover:underline italic" href={`/user/${userid}`}>
-                @{username}
-              </Link>
-            </h4>
-            <p className="text-sm">{hoverData?.bio as string}</p>
-            <div className="flex items-center pt-2 gap-1">
-              <span className="text-xs text-muted-foreground">
-                Posts: {hoverData?.count_posts}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                Followers: {hoverData?.count_followers}
-              </span>
-              <span className="text-xs text-muted-foreground">
-                Following: {hoverData?.count_following}
-              </span>
+      {hoverData.id ? (
+        <HoverCardContent className="w-100 ring-2">
+          <div className="flex justify-between space-x-4">
+            <Suspense fallback={<LoadingSpin></LoadingSpin>}>
+              <Image
+                className="rounded-full"
+                src={hoverData?.imglink}
+                alt={hoverData?.username}
+                height={80}
+                width={80}
+              ></Image>
+            </Suspense>
+            <div className="space-y-1">
+              <div className="flex gap-4">
+                <h4 className="text-sm font-semibold">
+                  <Link
+                    className="hover:underline italic"
+                    href={`/user/${userid}`}
+                  >
+                    @{username}
+                  </Link>
+                </h4>
+                <SignedIn>
+                  {curUser == userid ? null : (
+                    <FollowButton
+                      isFollowing={hoverData.is_following == "0" ? false : true}
+                      OnUpdate={OnUpdate}
+                    ></FollowButton>
+                  )}
+                </SignedIn>
+              </div>
+
+              <p className="text-sm">{hoverData?.bio as string}</p>
+              <div className="flex items-center pt-2 gap-1">
+                <span className="text-xs text-muted-foreground">
+                  Posts: {hoverData?.count_posts}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  Followers: {hoverData?.count_followers}
+                </span>
+                <span className="text-xs text-muted-foreground">
+                  Following: {hoverData?.count_following}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      </HoverCardContent>
+        </HoverCardContent>
+      ) : null}
     </HoverCard>
   );
 }

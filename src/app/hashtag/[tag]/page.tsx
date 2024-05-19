@@ -17,7 +17,7 @@ export default async function Tags({
   const userId = await getUserIdFromClerkId();
 
   const { rows: msg } =
-    await sql`SELECT m.*, u.username, u.imglink from nextmessages m JOIN nextusers u ON m.user_id = u.id join nextmessage_tags g on m.id = g.msg_id join nexthashtag h on h.id = g.tag_id where h.tag=${`#${tag}`} ORDER BY m.created DESC;`;
+    await sql`SELECT m.*, u.username, u.imglink, (select count(*) from nextlikes where msg_id = m.id) likes, (select count(*) from nextlikes where msg_id = m.id AND user_id = ${userId}) is_liked from nextmessages m JOIN nextusers u ON m.user_id = u.id join nextmessage_tags g on m.id = g.msg_id join nexthashtag h on h.id = g.tag_id where h.tag=${`#${tag}`} ORDER BY m.created DESC;`;
   if (searchParams?.sort == "asc") msg?.reverse();
   return (
     <Suspense fallback={<LoadingSpin></LoadingSpin>}>

@@ -17,7 +17,7 @@ export default async function UserPosts({
   const curUser = await getUserIdFromClerkId();
 
   const { rows: msgs } =
-    await sql`SELECT m.*, u.username, u.imglink from nextmessages m JOIN nextusers u ON m.user_id = u.id where u.id = ${userid} ORDER BY m.created DESC;`;
+    await sql`SELECT m.*, u.username, u.imglink, (select count(*) from nextlikes where msg_id = m.id) likes, (select count(*) from nextlikes where msg_id = m.id AND user_id = ${curUser}) is_liked from nextmessages m JOIN nextusers u ON m.user_id = u.id where u.id = ${userid} ORDER BY m.created DESC;`;
   if (searchParams?.sort == "asc") msgs?.reverse();
   return (
     <Suspense fallback={<LoadingSpin></LoadingSpin>}>
