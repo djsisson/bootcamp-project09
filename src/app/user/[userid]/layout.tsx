@@ -35,16 +35,18 @@ export default async function userProfile({
   return (
     <>
       <div className="flex gap-4 justify-center">
-        <div className="relative aspect-square bg-primary-foreground place-content-center justify-center rounded-full p-2 hover:ring-2">
-          <Suspense fallback={<LoadingSpin></LoadingSpin>}>
-            <Image
-              className="rounded-full "
-              src={userData.imglink}
-              alt={userData.username}
-              height={80}
-              width={80}
-            ></Image>
-          </Suspense>
+        <div className="relative aspect-square  place-content-center justify-center ">
+          <div className="rounded-full p-2 hover:ring-2 bg-primary-foreground">
+            <Suspense fallback={<LoadingSpin></LoadingSpin>}>
+              <Image
+                className="rounded-full "
+                src={userData.imglink}
+                alt={userData.username}
+                height={80}
+                width={80}
+              ></Image>
+            </Suspense>
+          </div>
         </div>
         <div className="bg-primary-foreground p-4 pb-2 rounded-3xl">
           <div className="flex justify-between space-x-4">

@@ -40,18 +40,20 @@ export default function Post({
   };
   return (
     <>
-      <div className="col-span-1 relative aspect-square bg-primary-foreground place-content-center justify-center rounded-full p-2 hover:ring-2">
-        <Suspense fallback={<LoadingSpin></LoadingSpin>}>
-          <Link href={`/user/${post.user_id}`}>
-            <Image
-              className="rounded-full "
-              src={post.imglink}
-              alt={post.username}
-              height={80}
-              width={80}
-            ></Image>
-          </Link>
-        </Suspense>
+      <div className="col-span-1 relative aspect-square place-content-center justify-center">
+        <div className="rounded-full p-2 hover:ring-2 bg-primary-foreground">
+          <Suspense fallback={<LoadingSpin></LoadingSpin>}>
+            <Link href={`/user/${post.user_id}`}>
+              <Image
+                className="rounded-full "
+                src={post.imglink}
+                alt={post.username}
+                height={80}
+                width={80}
+              ></Image>
+            </Link>
+          </Suspense>
+        </div>
       </div>
       <div className="col-span-7 bg-primary-foreground p-4 pb-2 rounded-3xl">
         <div>
