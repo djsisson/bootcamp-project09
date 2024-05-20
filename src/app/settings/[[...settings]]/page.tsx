@@ -21,7 +21,7 @@ const UserProfilePage = () => {
   return documentMounted
     ? createPortal(
         <div
-          className="modal absolute flex items-center justify-center inset-0 backdrop-blur-sm"
+          className="modal absolute flex flex-col items-center justify-center inset-0 backdrop-blur-sm"
           onClick={() => {
             handleClose();
           }}
@@ -39,6 +39,7 @@ const UserProfilePage = () => {
               }}
             />
           </div>
+          <div className="pt-2">Click the background to close</div>
         </div>,
         document.body
       )

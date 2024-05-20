@@ -27,13 +27,15 @@ export default async function UserPosts({
         </BackButton>
         <Sort url={``}></Sort>
       </div>
-      <div className="grid grid-cols-8 gap-4">
-        {msgs.length == 0
-          ? `No messages found for user: ${userid}`
-          : msgs.map((x) => (
-              <Post key={x.id} post={x} curUser={curUser}></Post>
-            ))}
-      </div>
+      {msgs.length == 0 ? (
+        `No messages found for user`
+      ) : (
+        <div className="grid grid-cols-8 gap-4">
+          {msgs.map((x) => (
+            <Post key={x.id} post={x} curUser={curUser}></Post>
+          ))}
+        </div>
+      )}
     </Suspense>
   );
 }

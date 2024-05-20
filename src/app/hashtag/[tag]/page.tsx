@@ -22,14 +22,20 @@ export default async function Tags({
   return (
     <Suspense fallback={<LoadingSpin></LoadingSpin>}>
       <div className="flex justify-between w-full pr-4 pb-4">
-        <BackButton><HiArrowUturnLeft /></BackButton>
+        <BackButton>
+          <HiArrowUturnLeft />
+        </BackButton>
         <Sort url={`${tag}/`}></Sort>
       </div>
-      <div className="grid grid-cols-8 gap-4">
-        {msg.length == 0
-          ? `No messages found for tag ${tag}`
-          : msg.map((x) => <Post key={x.id} post={x} curUser={userId}></Post>)}
-      </div>
+      {msg.length == 0 ? (
+        `No messages found for tag ${tag}`
+      ) : (
+        <div className="grid grid-cols-8 gap-4">
+          {msg.map((x) => (
+            <Post key={x.id} post={x} curUser={userId}></Post>
+          ))}
+        </div>
+      )}
     </Suspense>
   );
 }
